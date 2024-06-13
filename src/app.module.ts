@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { MoviesModule } from './movies/movies.module';
 import { config } from 'process';
-import { GenreModule } from './genre/genre.module';
 
 @Module({
   imports: [
@@ -25,8 +24,8 @@ import { GenreModule } from './genre/genre.module';
         synchronize : true,
       }),
     }),
-    MoviesModule,
-    GenreModule],
+    MoviesModule
+    ],
   controllers: [AppController],
   providers: [AppService],
 })

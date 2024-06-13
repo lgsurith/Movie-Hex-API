@@ -1,7 +1,7 @@
 import { Injectable , NotFoundException } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { Repository } from 'typeorm';
+import { Repository , QueryBuilder , ILike} from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Movie } from './entities/movie.entity';
 
@@ -77,6 +77,14 @@ export class MoviesService {
       return await this.movieRepositry.createQueryBuilder('movie')
       .orderBy('movie.rating','DESC')
       .getMany();
+  }
+
+
+  //to find the movies bnased on their genre.
+  async findMoviesByGenre(genre : string){
+    return await this.movieRepositry.find({
+      where : { genre : genre }
+    });
   }
 
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
@@ -17,7 +17,8 @@ export class MoviesController {
         movieName : 'The Shawshank Redemption',
         director : 'Frank Darabont',
         releaseDate : '1994-09-14',
-        rating : 9.3, 
+        rating : 9.3,
+        genre : "Thriller"
       }
     }
   })
@@ -34,22 +35,14 @@ export class MoviesController {
     description : 'To Find all the movies in the database',
     type : [CreateMovieDto]
   })
-  findAll() {
-    return this.moviesService.findAll();
+  findAll(@Query('genre') genre? : string){
+    if(genre){
+      return this.moviesService.findMoviesByGenre(genre);
+    }
+    else{
+      return this.moviesService.findAll();
+    }
   }
-
-  // @Get(':id')
-  // @ApiOkResponse({
-  //   description : 'To Find a movie by ID',
-  //   type : CreateMovieDto
-  // })
-  // //to raise errors when the movie is not found
-  // @ApiNotFoundResponse({
-  //   description : 'Oops! The Movie was not found in the database.'
-  // })
-  // findOne(@Param('id') id: string) {
-  //   return this.moviesService.findOne(+id);
-  // }
 
   //i.e updating the tasks.
   @Patch(':id')
@@ -80,8 +73,8 @@ export class MoviesController {
     type : [CreateMovieDto]
   })
   rankbyRating(){ {
-    return this.moviesService.findHighestRatedMovie();
+      return this.moviesService.findHighestRatedMovie();
+    }
   }
-}
 
 }
