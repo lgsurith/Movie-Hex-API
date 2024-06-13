@@ -38,18 +38,18 @@ export class MoviesController {
     return this.moviesService.findAll();
   }
 
-  @Get(':id')
-  @ApiOkResponse({
-    description : 'To Find a movie by ID',
-    type : CreateMovieDto
-  })
-  //to raise errors when the movie is not found
-  @ApiNotFoundResponse({
-    description : 'Oops! The Movie was not found in the database.'
-  })
-  findOne(@Param('id') id: string) {
-    return this.moviesService.findOne(+id);
-  }
+  // @Get(':id')
+  // @ApiOkResponse({
+  //   description : 'To Find a movie by ID',
+  //   type : CreateMovieDto
+  // })
+  // //to raise errors when the movie is not found
+  // @ApiNotFoundResponse({
+  //   description : 'Oops! The Movie was not found in the database.'
+  // })
+  // findOne(@Param('id') id: string) {
+  //   return this.moviesService.findOne(+id);
+  // }
 
   //i.e updating the tasks.
   @Patch(':id')
@@ -72,4 +72,16 @@ export class MoviesController {
   remove(@Param('id') id: string) {
     return this.moviesService.remove(+id);
   }
+
+  //to add a controller for the services where we used it to rank the movies by their ratings.
+  @Get('rank') 
+  @ApiOkResponse({
+    description : 'To Rank the movies by their ratings',
+    type : [CreateMovieDto]
+  })
+  rankbyRating(){ {
+    return this.moviesService.findHighestRatedMovie();
+  }
+}
+
 }

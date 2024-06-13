@@ -1,4 +1,4 @@
-import { Column , Entity , JoinColumn , JoinTable, ManyToMany , PrimaryColumn , PrimaryGeneratedColumn } from 'typeorm' ;
+import { Column , Decimal128, Entity , JoinColumn , JoinTable, ManyToMany , NumericType, PrimaryColumn , PrimaryGeneratedColumn } from 'typeorm' ;
 import { Genre } from 'src/genre/entities/genre.entity';
 
 @Entity()
@@ -15,7 +15,7 @@ export class Movie {
     @Column()
     releaseDate : Date ;
 
-    @Column()
+    @Column('decimal', { precision: 3, scale: 1 })
     rating : number ;
 
     @ManyToMany(() => Genre , genre => genre.movies)

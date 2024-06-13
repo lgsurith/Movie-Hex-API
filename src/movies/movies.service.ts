@@ -70,4 +70,13 @@ export class MoviesService {
       throw error;
     }
   }
+
+
+  //to find the highest rated movie
+  async findHighestRatedMovie(){
+      return await this.movieRepositry.createQueryBuilder('movie')
+      .orderBy('movie.rating','DESC')
+      .getMany();
+  }
+
 }

@@ -13,23 +13,67 @@ export class GenreService {
     private readonly genreRepositry :
     Repository<Genre>){
     }
-  create(createGenreDto: CreateGenreDto) {
-    return 'This action adds a new genre';
+
+  async create(createGenreDto: CreateGenreDto) {
+    try{
+      const genre = this.genreRepositry.create(createGenreDto);
+      return await this.genreRepositry.save(genre);
+    }
+    catch(error){
+      console.error(error);
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all genre`;
+  async findAll() {
+    try {
+      return await this.genreRepositry.find();
+    }
+    catch(error){
+      console.error(error);
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} genre`;
+  
+  async findOne(id: number) {
+    try{
+      return await this.genreRepositry.findOne({
+        where : { id }
+      });
+    }
+    catch(error){
+      console.error(error);
+      throw error;
+    }
   }
 
-  update(id: number, updateGenreDto: UpdateGenreDto) {
-    return `This action updates a #${id} genre`;
+  async update(id: number, updateGenreDto: UpdateGenreDto) {
+   try{
+    const genre = await this.findOne(id);
+    if(!genre){
+      throw new NotFoundException(`Genre with id ${id} not found`);
+    }
+    this.genreRepositry.merge(genre,updateGenreDto);
+    return await this.genreRepositry.save(genre);
+   }
+   catch(error){
+      console.error(error);
+      throw error;
+   }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} genre`;
+  async remove(id: number) {
+    try{
+      const genre = await this.findOne(id);
+      if(!genre){
+        throw new NotFoundException(`Genre with id ${id} not found`);
+      }
+      return await this.genreRepositry.remove(genre);
+    }catch(error){
+      console.error(error);
+      throw error;
+    }
   }
+  
 }
