@@ -1,26 +1,73 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , NotFoundException } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Movie } from './entities/movie.entity';
 
 @Injectable()
 export class MoviesService {
-  create(createMovieDto: CreateMovieDto) {
-    return 'This action adds a new movie';
+  constructor(
+    @InjectRepository(Movie)
+    private readonly movieRepositry :
+    Repository<Movie>){
+    }
+
+  async create(createMovieDto: CreateMovieDto) {
+    try{
+      const movie = this.movieRepositry.create({...createMovieDto })
+      return await this.movieRepositry.save(movie)
+    }catch(error){
+      console.error('Movie cannot be created : ',error)
+      throw error
+    }
   }
 
-  findAll() {
-    return `This action returns all movies`;
+  async findAll() {
+    try{
+      return await this.movieRepositry.find();
+    }catch(error){
+      console.error('Movies cannot be found :' , error)
+      throw error
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movie`;
+  async findOne(id: number) {
+    try{
+      return await this.movieRepositry.findOne({
+        where : { id }
+      });
+    }catch(error){
+      console.error('Movie cannot be found : ',error)
+      throw error;
+    }
   }
 
-  update(id: number, updateMovieDto: UpdateMovieDto) {
-    return `This action updates a #${id} movie`;
+  async update(id: number, updateMovieDto: UpdateMovieDto) {
+    try{
+      const movie = await this.findOne(id)
+
+      if(!movie){
+        throw new NotFoundException();
+      }
+      Object.assign(movie,updateMovieDto)
+      return await this.movieRepositry.save(movie)
+    }catch(error){
+      console.error('Movie details cannot be updated' , error)
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movie`;
+  async remove(id: number) {
+    try{
+      const movie = await this.findOne(id)
+      if(!movie){
+        throw new NotFoundException();
+      }
+      return await this.movieRepositry.remove(movie)
+    }catch(error){
+      console.error('Movie cannot be removed : ',error)
+      throw error;
+    }
   }
 }
