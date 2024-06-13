@@ -71,14 +71,12 @@ export class MoviesService {
     }
   }
 
-
   //to find the highest rated movie
   async findHighestRatedMovie(){
       return await this.movieRepositry.createQueryBuilder('movie')
       .orderBy('movie.rating','DESC')
       .getMany();
   }
-
 
   //to find the movies bnased on their genre.
   async findMoviesByGenre(genre : string){
@@ -87,4 +85,15 @@ export class MoviesService {
     });
   }
 
+  //to have a query with both genre and rating of the movie.
+  async findMoviesByGenreAndRank(genre? : string , rank : boolean = false){
+    const query = this.movieRepositry.createQueryBuilder('movie')
+    if(genre){
+      query.where('movie.genre = :genre',{ genre : genre })
+    }
+    if(rank){
+      query.orderBy('movie.rating','DESC')
+    }
+    return await query.getMany();
+  }
 }

@@ -35,30 +35,15 @@ export class MoviesController {
     description : 'To Find all the movies in the database',
     type : [CreateMovieDto]
   })
-  findAll(@Query('genre') genre? : string){
-    if(genre){
-      return this.moviesService.findMoviesByGenre(genre);
-    }
-    else{
-      return this.moviesService.findAll();
-    }
-  }
-
-  //i.e updating the tasks.
-  @Patch(':id')
-  @ApiBody({
-    description : 'To Update a Movie',
-    schema : {
-      example : {
-        movieName : 'The Shawshank Redemption',
-        director : 'Frank Darabont',
-        releaseDate : '1994-09-14',
-        rating : 9.4, 
-      }
-    }
-  })
-  update(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
-    return this.moviesService.update(+id, updateMovieDto);
+  findAll(@Query('genre') genre? : string , @Query('rank') rank? : string){
+    // if(genre){
+    //   return this.moviesService.findMoviesByGenre(genre);
+    // }
+    // else{
+    //   return this.moviesService.findAll();
+    // }
+    const isRanked = rank == 'true';
+    return this.moviesService.findMoviesByGenreAndRank(genre,isRanked);
   }
 
   @Delete(':id')
